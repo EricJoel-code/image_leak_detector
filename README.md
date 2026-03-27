@@ -91,7 +91,7 @@ image_analysis_project/
 │   └── sanitizer.py      # Eliminar los metadatos sensibles de las imagenes
 │
 ├── cli/
-│   └── cli.py            # Punto de entrada 
+│   └── cli.py            # Linea de comandos 
 │
 ├── venv/                 # Entorno virtual
 ├── main.py               # Archivo Principal
