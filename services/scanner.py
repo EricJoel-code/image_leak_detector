@@ -3,6 +3,7 @@ import os
 from core.extractor import extract_metadata
 from core.analyzer import analyze_metadata
 from core.risk_engine import calculate_risk
+from utils.hashing import calculate_sha256
 
 # Extenciones validas de las imagenes
 VALID_EXTENSIONS = (".jpg", ".jpeg", ".png", ".tiff")
@@ -42,12 +43,16 @@ def scan_folder(folder_path):
             # 3. Calcular riesgo
             risk = calculate_risk(findings)
             
+            # Calculamos hash para identificar archivos únicos (opcional pero útil para grandes carpetas)
+            file_hash = calculate_sha256(file_path)
+            
             # 4. Guardamos resultado estructurado
             result = {
                 "file": filename,
                 "path": file_path,
                 "risk": risk,
-                "findings": findings
+                "findings": findings,
+                "hash": file_hash
             }
             
             results.append(result)

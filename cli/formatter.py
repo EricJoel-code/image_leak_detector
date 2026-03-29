@@ -1,4 +1,4 @@
-def print_image_result(image_path, risk, findings):
+def print_image_result(image_path, risk, findings, file_hash=None):
     """
     Imprime el resultado de análisis de una imagen
     de forma estructurada y legible.
@@ -7,6 +7,10 @@ def print_image_result(image_path, risk, findings):
     print("\n" + "=" * 50)
     print(f"[+] Imagen: {image_path}")
     print(f"[!] Riesgo: {risk}")
+    
+    if file_hash:
+        print(f"[#] Hash SHA-256: {file_hash}")
+    
     print("-" * 50)
     
     if findings:

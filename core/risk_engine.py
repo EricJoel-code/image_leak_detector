@@ -6,7 +6,7 @@ def calculate_risk(findings):
             score += 5
         elif f["type"] == "MEDIUM":
             score += 3
-        elif f["Type"] == "LOW":
+        elif f["type"] == "LOW":
             score +=1
             
     if score >= 7:

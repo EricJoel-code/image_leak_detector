@@ -9,7 +9,13 @@ from services.sanitizer import sanitizer_image
 from core.extractor import extract_metadata
 from core.analyzer import analyze_metadata
 from core.risk_engine import calculate_risk
+
+# Importamos formatter para imprimir resultados
 from .formatter import print_image_result, prin_scan_summary
+
+# Importamos utils para hashing
+from utils.hashing import calculate_sha256
+
 
 
 def handle_check(image_path):
@@ -29,9 +35,10 @@ def handle_check(image_path):
 
     findings = analyze_metadata(metadata)
     risk = calculate_risk(findings)
+    file_hash = calculate_sha256(image_path)
 
     # Usamos el formatter para imprimir resultados
-    print_image_result(image_path, risk, findings)
+    print_image_result(image_path, risk, findings, file_hash)
 
 
 def handle_scan(folder_path):
