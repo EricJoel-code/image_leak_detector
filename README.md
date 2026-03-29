@@ -22,18 +22,28 @@ Esto representa un riesgo real de **fuga de información (Data Leakage)** en con
 ## 🚀 Características actuales
 
 * 🔍 Extracción de metadatos usando ExifTool
-* 🧠 Motor de análisis basado en reglas
-* ⚠️ Detección de:
+* 🧠 Motor de análisis basado en reglas (rule-based detection)
+* ⚠️ Detección de exposición de información sensible:
 
-  * Coordenadas GPS
-  * Software de edición
-  * Timestamps
+  * Coordenadas GPS (ubicación)
+  * Software de edición (Photoshop, GIMP, etc.)
+  * Timestamps (fecha de creación)
+* 🔬 Análisis forense básico:
+  
+  * 🕒 Detección de inconsistencias temporales (CreateDate vs ModifyDate)
+  * 📷 Identificación de dispositivo (Make / Model)
+  * ⚠️ Detección de metadata ausente (posible sanitización)
+* 🔐 Verificación de integridad:
+  
+  * Generación de hash SHA-256 por archivo
 * ⚖️ Clasificación de riesgo:
 
   * LOW
   * MEDIUM
   * HIGH
 
+* 📁 Análisis individual y masivo (carpetas completas)
+* 🖥️ Output estructurado en consola (formato claro y legible)
 * 📊 Resumen de análisis en escaneo masivo (conteo por nivel de riesgo)
 * 🧼 Eliminación de metadatos (sanitización - DLP)
 
@@ -111,7 +121,10 @@ image_analysis_project/
 │
 ├── cli/
 │   └── cli.py            # Linea de comandos
-│   └── formatter.py.py   # Fomato en consola 
+│   └── formatter.py.py   # Fomato en consola
+│
+├── utils/
+│   └── hashing.py        # Calculo del hash de un archivo
 │
 ├── venv/                 # Entorno virtual
 ├── main.py               # Archivo Principal
@@ -231,13 +244,13 @@ El desarrollo de **ImageLeak Detector** está organizado en fases progresivas, e
 
 ### 🔧 Fase 3 — Análisis avanzado de seguridad
 
-* [ ] Detección de inconsistencias temporales:
+* [x] Detección de inconsistencias temporales:
 
   * CreateDate vs ModifyDate
-* [ ] Fingerprinting de dispositivo (Make, Model)
+* [x] Fingerprinting de dispositivo (Make, Model)
+* [x] Generación de hashes (SHA-256) para integridad
+* [x] Detección de metadata sospechosa o incompleta
 * [ ] Identificación de patrones entre imágenes
-* [ ] Generación de hashes (SHA-256) para integridad
-* [ ] Detección de metadata sospechosa o incompleta
 
 ---
 
