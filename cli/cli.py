@@ -3,7 +3,8 @@ import os
 
 # Importamos servicios
 from services.scanner import scan_folder
-from services.sanitizer import sanitizer_image 
+from services.sanitizer import sanitizer_image
+from services.reporter import genertate_report, save_json_report 
 
 # Importamos core para check individual
 from core.extractor import extract_metadata
@@ -41,7 +42,7 @@ def handle_check(image_path):
     print_image_result(image_path, risk, findings, file_hash)
 
 
-def handle_scan(folder_path):
+def handle_scan(folder_path, json_output=None):
     """
     Analiza una carpeta completa
     """
@@ -55,6 +56,11 @@ def handle_scan(folder_path):
     # Usamos el formatter para imprimir el resumen del escaneo y las correlaciones
     prin_scan_summary(results)
     print_correlations(correlations)
+    
+    # Exportar JSON si se solicita
+    if json_output:
+        report = genertate_report(results, correlations)
+        save_json_report(report, json_output)
 
 
 def handle_sanitize(image_path):
@@ -77,18 +83,29 @@ def run():
     if len(sys.argv) < 3:
         print("Uso:")
         print("  check <imagen>")
-        print("  scan <carpeta>")
+        print("  scan <carpeta> [--json output.json]")
         print("  sanitize <imagen>")
         return
 
     command = sys.argv[1]
     path = sys.argv[2]
-
+    
+    # Opcional: manejo de argumento para exportar JSON
+    json_output = None
+    
+    if "--json" in sys.argv:
+        try:
+            json_index = sys.argv.index("--json")
+            json_output = sys.argv[json_index + 1]
+        except IndexError:
+            print("[ERROR] Debes especificar un archivo para exportar el JSON (--json)")
+            return
+            
     if command == "check":
         handle_check(path)
 
     elif command == "scan":
-        handle_scan(path)
+        handle_scan(path, json_output)
 
     elif command == "sanitize":
         handle_sanitize(path)
