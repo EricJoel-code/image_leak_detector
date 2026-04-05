@@ -5,6 +5,7 @@ import os
 from services.scanner import scan_folder
 from services.sanitizer import sanitizer_image
 from services.reporter import genertate_report, save_json_report 
+from services.dlp import evaluate_dlp
 
 # Importamos core para check individual
 from core.extractor import extract_metadata
@@ -12,16 +13,16 @@ from core.analyzer import analyze_metadata
 from core.risk_engine import calculate_risk
 
 # Importamos formatter para imprimir resultados
-from .formatter import print_image_result, prin_scan_summary, print_correlations
+from .formatter import print_image_result, prin_scan_summary, print_correlations, print_dlp_result
 
 # Importamos utils para hashing
 from utils.hashing import calculate_sha256
 
 
 
-def handle_check(image_path):
+def handle_check(image_path, dlp_mode=False):
     """
-    Analiza una sola imagen
+    Analiza una sola imagen con opción de evaluación DLP
     """
 
     if not os.path.exists(image_path):
@@ -36,10 +37,16 @@ def handle_check(image_path):
 
     findings = analyze_metadata(metadata)
     risk = calculate_risk(findings)
+    
     file_hash = calculate_sha256(image_path)
 
-    # Usamos el formatter para imprimir resultados
+    # Usamos el formatter para imprimir resultados de forma legible
     print_image_result(image_path, risk, findings, file_hash)
+    
+    # 🔥 Si estamos en modo DLP, evaluamos la decisión y la imprimimos
+    if dlp_mode:
+        decision = evaluate_dlp(risk, findings)
+        print_dlp_result(decision)
 
 
 def handle_scan(folder_path, json_output=None):
@@ -89,6 +96,7 @@ def run():
 
     command = sys.argv[1]
     path = sys.argv[2]
+    dlp_mode = "--dlp" in sys.argv
     
     # Opcional: manejo de argumento para exportar JSON
     json_output = None
@@ -102,7 +110,7 @@ def run():
             return
             
     if command == "check":
-        handle_check(path)
+        handle_check(path, dlp_mode)
 
     elif command == "scan":
         handle_scan(path, json_output)

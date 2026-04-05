@@ -94,3 +94,25 @@ def print_correlations(correlations):
                 print(f"  - {f}")
 
     print("=" * 50)
+    
+
+def print_dlp_result(decision):
+    """
+    Imprime resultado del análisis DLP
+    """
+    
+    print("\n" + "=" * 50)
+    print("EVALUACIÓN DLP")
+    print("=" * 50)
+    
+    print(f"Acción: {decision['action']}")
+    
+    if decision["reasons"]:
+        print("\nRazones:")
+        for r in decision["reasons"]:
+            print(f" - {r}")
+            
+    if decision["requires_sanitization"]:
+        print("\n[!] Se recomienda eliminar metadata antes de compartir la imagen")
+        
+    print("=" * 50)
